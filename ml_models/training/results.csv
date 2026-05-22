@@ -1,0 +1,13 @@
+dataset,model,accuracy,precision,recall,f1_score,roc_auc,model_file
+heart,logistic_regression,0.7435897435897436,0.7,0.7777777777777778,0.7368421052631579,0.8333333333333333,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/heart_logistic_regression.joblib
+heart,random_forest,0.7435897435897436,0.6818181818181818,0.8333333333333334,0.75,0.8888888888888888,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/heart_random_forest.joblib
+heart,svm,0.717948717948718,0.6666666666666666,0.7777777777777778,0.717948717948718,0.8624338624338624,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/heart_svm.joblib
+heart,xgboost,0.8205128205128205,0.7619047619047619,0.8888888888888888,0.8205128205128205,0.8465608465608465,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/heart_xgboost.joblib
+diabetes,logistic_regression,0.7611940298507462,0.6060606060606061,0.8695652173913043,0.7142857142857143,0.9001976284584979,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/diabetes_logistic_regression.joblib
+diabetes,random_forest,0.7910447761194029,0.7368421052631579,0.6086956521739131,0.6666666666666666,0.8364624505928855,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/diabetes_random_forest.joblib
+diabetes,svm,0.7313432835820896,0.6666666666666666,0.43478260869565216,0.5263157894736842,0.8152173913043479,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/diabetes_svm.joblib
+diabetes,xgboost,0.7611940298507462,0.6842105263157895,0.5652173913043478,0.6190476190476191,0.8201581027667985,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/diabetes_xgboost.joblib
+bp,logistic_regression,0.9118065433854907,0.8590604026845637,0.757396449704142,0.8050314465408805,0.953128116481617,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/bp_logistic_regression.joblib
+bp,random_forest,0.9018492176386913,0.7604166666666666,0.863905325443787,0.8088642659279779,0.9502249407175942,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/bp_random_forest.joblib
+bp,svm,0.9018492176386913,0.7976190476190477,0.7928994082840237,0.7952522255192879,0.9427786273075816,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/bp_svm.joblib
+bp,xgboost,0.8890469416785206,0.745945945945946,0.8165680473372781,0.7796610169491526,0.9451166810717373,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/bp_xgboost.joblib

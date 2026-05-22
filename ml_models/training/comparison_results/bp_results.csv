@@ -1,0 +1,5 @@
+dataset,model,accuracy,precision,recall,f1_score,roc_auc,model_file
+bp,logistic_regression,0.9118065433854907,0.8590604026845637,0.757396449704142,0.8050314465408805,0.953128116481617,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/bp_logistic_regression.joblib
+bp,random_forest,0.9018492176386913,0.7604166666666666,0.863905325443787,0.8088642659279779,0.9502249407175942,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/bp_random_forest.joblib
+bp,svm,0.9018492176386913,0.7976190476190477,0.7928994082840237,0.7952522255192879,0.9427786273075816,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/bp_svm.joblib
+bp,xgboost,0.8890469416785206,0.745945945945946,0.8165680473372781,0.7796610169491526,0.9451166810717373,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/bp_xgboost.joblib

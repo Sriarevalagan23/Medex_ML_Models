@@ -1,0 +1,5 @@
+dataset,model,accuracy,precision,recall,f1_score,roc_auc,model_file
+diabetes,random_forest,0.7910447761194029,0.7368421052631579,0.6086956521739131,0.6666666666666666,0.8364624505928855,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/diabetes_random_forest.joblib
+diabetes,logistic_regression,0.7611940298507462,0.6060606060606061,0.8695652173913043,0.7142857142857143,0.9001976284584979,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/diabetes_logistic_regression.joblib
+diabetes,xgboost,0.7611940298507462,0.6842105263157895,0.5652173913043478,0.6190476190476191,0.8201581027667985,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/diabetes_xgboost.joblib
+diabetes,svm,0.7313432835820896,0.6666666666666666,0.43478260869565216,0.5263157894736842,0.8152173913043479,/Users/srinidhi/Desktop/Medex_ml_models/ml_models/models/diabetes_svm.joblib
