@@ -62,6 +62,303 @@ bp_model = joblib.load(
     MODELS_DIR / "bp_model.joblib"
 )
 
+
+def build_response(
+    risk,
+    confidence,
+    title,
+    description,
+    tips
+):
+
+    return {
+        "success": True,
+        "risk": risk,
+        "confidence": round(confidence, 2),
+        "title": title,
+        "description": description,
+        "tips": list(set(tips)),
+        "disclaimer": (
+            "This prediction is informational only and not a medical diagnosis."
+        )
+    }
+
+
+def derive_binary_risk(
+    probability,
+    high_threshold,
+    moderate_threshold
+):
+
+    if probability >= high_threshold:
+        return "High Risk"
+
+    if probability >= moderate_threshold:
+        return "Moderate Risk"
+
+    return "Low Risk"
+
+
+# ======================
+# HEART EXPLANATION
+# ======================
+
+def explain_heart(
+    data,
+    risk,
+    confidence
+):
+
+    reasons = []
+    tips = []
+
+    if data["blood_pressure"] >= 140:
+        reasons.append(
+            "high blood pressure"
+        )
+        tips.append(
+            "Reduce salty foods"
+        )
+
+    if data["cholesterol"] >= 240:
+        reasons.append(
+            "high cholesterol"
+        )
+        tips.append(
+            "Reduce oily foods"
+        )
+
+    if data["smoking"] == 1:
+        reasons.append(
+            "smoking habit"
+        )
+        tips.append(
+            "Avoid smoking"
+        )
+
+    if data["diabetes"] == 1:
+        reasons.append(
+            "diabetes-related risk"
+        )
+        tips.append(
+            "Monitor blood sugar"
+        )
+
+    if (
+        data[
+            "exercise_chest_pain"
+        ] == 1
+    ):
+        reasons.append(
+            "exercise-related chest pain"
+        )
+
+    if data["heart_rate"] < 100:
+        tips.append(
+            "Stay physically active"
+        )
+
+    title = (
+        "High Heart Risk Detected"
+        if risk == "High Risk"
+        else "Moderate Heart Risk"
+        if risk == "Moderate Risk"
+        else "Low Heart Risk"
+    )
+
+    if reasons:
+        description = (
+            "Your result may be influenced by "
+            + ", ".join(reasons)
+            + "."
+        )
+    else:
+        description = (
+            "Your inputs suggest a generally healthy heart profile."
+        )
+
+    return build_response(
+        risk,
+        confidence,
+        title,
+        description,
+        tips
+    )
+
+
+# ======================
+# DIABETES EXPLANATION
+# ======================
+
+def explain_diabetes(
+    data,
+    risk,
+    confidence
+):
+
+    reasons = []
+    tips = []
+
+    if data["glucose"] >= 180:
+        reasons.append(
+            "high glucose levels"
+        )
+        tips.append(
+            "Reduce sugary foods"
+        )
+
+    if data["blood_pressure"] >= 90:
+        reasons.append(
+            "elevated blood pressure"
+        )
+
+    if data["weight"] >= 85:
+        reasons.append(
+            "higher body weight"
+        )
+        tips.append(
+            "Maintain healthy weight"
+        )
+
+    if (
+        data[
+            "family_history"
+        ]
+    ):
+        reasons.append(
+            "family history of diabetes"
+        )
+
+    if data["age"] > 50:
+        reasons.append(
+            "age-related risk"
+        )
+
+    tips.extend([
+        "Exercise regularly",
+        "Stay hydrated"
+    ])
+
+    title = (
+        "High Diabetes Risk"
+        if risk == "High Risk"
+        else "Moderate Diabetes Risk"
+        if risk == "Moderate Risk"
+        else "Low Diabetes Risk"
+    )
+
+    if reasons:
+        description = (
+            "Your result may be influenced by "
+            + ", ".join(reasons)
+            + "."
+        )
+    else:
+        description = (
+            "Your current inputs show lower diabetes risk indicators."
+        )
+
+    return build_response(
+        risk,
+        confidence,
+        title,
+        description,
+        tips
+    )
+
+
+# ======================
+# BP EXPLANATION
+# ======================
+
+def explain_bp(
+    data,
+    risk,
+    confidence
+):
+
+    reasons = []
+    tips = []
+
+    if (
+        data["systolic_bp"]
+        >= 140
+        or
+        data["diastolic_bp"]
+        >= 90
+    ):
+        reasons.append(
+            "high blood pressure"
+        )
+        tips.append(
+            "Reduce salt intake"
+        )
+
+    if data["stress_level"] >= 7:
+        reasons.append(
+            "high stress levels"
+        )
+        tips.append(
+            "Practice relaxation"
+        )
+
+    if data["sleep_hours"] < 6:
+        reasons.append(
+            "poor sleep quality"
+        )
+        tips.append(
+            "Improve sleep routine"
+        )
+
+    if data["smoking"] == 1:
+        reasons.append(
+            "smoking habit"
+        )
+        tips.append(
+            "Avoid smoking"
+        )
+
+    if (
+        data[
+            "physical_activity"
+        ] < 2
+    ):
+        reasons.append(
+            "low physical activity"
+        )
+        tips.append(
+            "Exercise daily"
+        )
+
+    title = (
+        "High Blood Pressure Risk"
+        if risk == "High Risk"
+        else (
+            "Elevated Blood Pressure"
+            if risk == "Elevated"
+            else "Healthy Blood Pressure"
+        )
+    )
+
+    if reasons:
+        description = (
+            "Your result may be influenced by "
+            + ", ".join(reasons)
+            + "."
+        )
+    else:
+        description = (
+            "Your blood pressure indicators look healthy."
+        )
+
+    return build_response(
+        risk,
+        confidence,
+        title,
+        description,
+        tips
+    )
+
 # ======================
 # HEALTH CHECK
 # ======================
@@ -135,21 +432,21 @@ def predict_heart():
         ])
 
         prediction = int(heart_model.predict(df)[0])
-        confidence = float(heart_model.predict_proba(df)[0][1])
+        probability = float(heart_model.predict_proba(df)[0][1])
+        confidence = probability * 100
+        risk = derive_binary_risk(
+            probability,
+            high_threshold=0.75,
+            moderate_threshold=0.40
+        )
 
-        return jsonify({
-            "success": True,
-            "risk":
-            "High Risk"
-            if prediction == 1
-            else "Low Risk",
-
-            "confidence":
-            round(
-                confidence * 100,
-                2
+        return jsonify(
+            explain_heart(
+                data,
+                risk,
+                confidence
             )
-        })
+        )
 
     except Exception as e:
         return jsonify({
@@ -219,21 +516,21 @@ def predict_diabetes():
         ])
 
         prediction = int(diabetes_model.predict(df)[0])
-        confidence = float(diabetes_model.predict_proba(df)[0][1])
+        probability = float(diabetes_model.predict_proba(df)[0][1])
+        confidence = probability * 100
+        risk = derive_binary_risk(
+            probability,
+            high_threshold=0.75,
+            moderate_threshold=0.45
+        )
 
-        return jsonify({
-            "success": True,
-            "risk":
-            "High Risk"
-            if prediction == 1
-            else "Low Risk",
-
-            "confidence":
-            round(
-                confidence * 100,
-                2
+        return jsonify(
+            explain_diabetes(
+                data,
+                risk,
+                confidence
             )
-        })
+        )
 
     except Exception as e:
         return jsonify({
@@ -283,17 +580,15 @@ def predict_bp():
             }
         ])
 
-        prediction = int(bp_model.predict(df)[0])
-        confidence = float(bp_model.predict_proba(df)[0][1])
+        probability = float(bp_model.predict_proba(df)[0][1])
+        confidence = probability * 100
 
-        risk_levels = {
-            0: "Normal",
-            1: "Elevated",
-            2: "High Risk",
-        }
-
-        # Start with model's prediction
-        risk = risk_levels.get(prediction, "Unknown")
+        if probability >= 0.75:
+            risk = "High Risk"
+        elif probability >= 0.40:
+            risk = "Elevated"
+        else:
+            risk = "Normal"
 
         # Medical safeguard override: if measured BP crosses clinical thresholds,
         # override the model output to be medically conservative.
@@ -308,15 +603,16 @@ def predict_bp():
             if (systolic >= 140) or (diastolic >= 90):
                 risk = "High Risk"
             elif (systolic >= 120) or (diastolic >= 80):
-                # Only escalate to Elevated if model didn't already predict High
                 if risk != "High Risk":
                     risk = "Elevated"
 
-        return jsonify({
-            "success": True,
-            "risk": risk,
-            "confidence": round(confidence * 100, 2),
-        })
+        return jsonify(
+            explain_bp(
+                data,
+                risk,
+                confidence
+            )
+        )
 
     except Exception as e:
         return jsonify({
