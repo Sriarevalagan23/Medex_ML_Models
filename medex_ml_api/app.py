@@ -112,6 +112,12 @@ def explain_heart(
     reasons = []
     tips = []
 
+    # AGE
+    if data["age"] >= 55:
+        reasons.append(
+            "age-related cardiovascular risk"
+        )
+
     if data["blood_pressure"] >= 140:
         reasons.append(
             "high blood pressure"
@@ -128,6 +134,21 @@ def explain_heart(
             "Reduce oily foods"
         )
 
+    # HEART RATE
+    if data["heart_rate"] > 100:
+        reasons.append(
+            "elevated heart rate"
+        )
+        tips.append(
+            "Monitor heart rate"
+        )
+
+    elif data["heart_rate"] < 60:
+        reasons.append(
+            "low resting heart rate"
+        )
+
+    # SMOKING
     if data["smoking"] == 1:
         reasons.append(
             "smoking habit"
@@ -136,6 +157,7 @@ def explain_heart(
             "Avoid smoking"
         )
 
+    # DIABETES
     if data["diabetes"] == 1:
         reasons.append(
             "diabetes-related risk"
@@ -144,6 +166,7 @@ def explain_heart(
             "Monitor blood sugar"
         )
 
+    # CHEST PAIN
     if (
         data[
             "exercise_chest_pain"
@@ -153,10 +176,22 @@ def explain_heart(
             "exercise-related chest pain"
         )
 
-    if data["heart_rate"] < 100:
-        tips.append(
-            "Stay physically active"
+    # CHEST PAIN TYPE
+    if (
+        data[
+            "chest_pain_type"
+        ] >= 2
+    ):
+        reasons.append(
+            "chest pain indicators"
         )
+
+    # DEFAULT HEALTH TIPS
+    tips.extend([
+        "Stay physically active",
+        "Maintain balanced nutrition",
+        "Get regular health checkups"
+    ])
 
     title = (
         "High Heart Risk Detected"
@@ -173,9 +208,25 @@ def explain_heart(
             + "."
         )
     else:
-        description = (
-            "Your inputs suggest a generally healthy heart profile."
-        )
+        if risk == "High Risk":
+
+            description = (
+                "Your prediction suggests increased heart-related risk patterns even though strong visible risk factors were limited."
+            )
+
+        elif risk == (
+            "Moderate Risk"
+        ):
+
+            description = (
+                "Some indicators suggest a moderate heart-related risk."
+            )
+
+        else:
+
+            description = (
+                "Your current inputs suggest a lower heart-related risk."
+            )
 
     return build_response(
         risk,
