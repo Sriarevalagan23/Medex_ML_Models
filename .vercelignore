@@ -1,0 +1,5 @@
+ml_models/
+*.csv
+*.ipynb
+.git
+.venv
