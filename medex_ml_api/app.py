@@ -72,17 +72,25 @@ class VercelPathFixer:
         self.wsgi_app = wsgi_app
 
     def __call__(self, environ, start_response):
-        path = environ.get("PATH_INFO", "")
+        raw_uri = environ.get("REQUEST_URI", "") or environ.get("RAW_URI", "")
+        if raw_uri:
+            path = raw_uri.split("?")[0]
+        else:
+            path = environ.get("PATH_INFO", "")
+
         for prefix in ["/api/index.py", "/api/index", "/api"]:
             if path.startswith(prefix):
                 path = path[len(prefix):]
                 break
+
         if not path or not path.startswith("/"):
             path = "/" + path.lstrip("/")
+
         environ["PATH_INFO"] = path
         return self.wsgi_app(environ, start_response)
 
 app.wsgi_app = VercelPathFixer(app.wsgi_app)
+
 
 
 
