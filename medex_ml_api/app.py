@@ -32,9 +32,19 @@ except Exception:
             probabilities = self.predict_proba(X)[:, 1]
             return (probabilities >= self.threshold).astype(int)
 
-# Joblib pickles the diabetes model with `__main__.ThresholdClassifier` as the
-# import path, so expose the class under that module name for Gunicorn.
+# Joblib pickles models with varying import paths, so expose the class under both __main__ and ml_models
+import types
 sys.modules["__main__"].ThresholdClassifier = ThresholdClassifier
+
+ml_models_mod = types.ModuleType("ml_models")
+training_mod = types.ModuleType("ml_models.training")
+train_models_mod = types.ModuleType("ml_models.training.train_models")
+train_models_mod.ThresholdClassifier = ThresholdClassifier
+training_mod.train_models = train_models_mod
+ml_models_mod.training = training_mod
+sys.modules["ml_models"] = ml_models_mod
+sys.modules["ml_models.training"] = training_mod
+sys.modules["ml_models.training.train_models"] = train_models_mod
 
 # ======================
 # APP CONFIG
