@@ -10,6 +10,3 @@ dependencies = [
     "scikit-learn==1.8.0",
     "python-dotenv",
 ]
-
-[tool.vercel]
-entrypoint = "medex_ml_api/app.py"

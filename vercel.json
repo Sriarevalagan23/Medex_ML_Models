@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/medex_ml_api/app.py"
+      "destination": "/api/index.py"
     }
   ]
 }
