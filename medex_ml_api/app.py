@@ -66,22 +66,26 @@ def not_found(e):
     }), 404
 
 
+from urllib.parse import parse_qs
+
+
 class VercelPathFixer:
 
     def __init__(self, wsgi_app):
         self.wsgi_app = wsgi_app
 
     def __call__(self, environ, start_response):
-        raw_uri = environ.get("REQUEST_URI", "") or environ.get("RAW_URI", "")
-        if raw_uri:
-            path = raw_uri.split("?")[0]
+        query_string = environ.get("QUERY_STRING", "")
+        params = parse_qs(query_string)
+
+        if "__path" in params and params["__path"]:
+            path = params["__path"][0]
         else:
             path = environ.get("PATH_INFO", "")
-
-        for prefix in ["/api/index.py", "/api/index", "/api"]:
-            if path.startswith(prefix):
-                path = path[len(prefix):]
-                break
+            for prefix in ["/api/index.py", "/api/index", "/api"]:
+                if path.startswith(prefix):
+                    path = path[len(prefix):]
+                    break
 
         if not path or not path.startswith("/"):
             path = "/" + path.lstrip("/")
@@ -90,6 +94,7 @@ class VercelPathFixer:
         return self.wsgi_app(environ, start_response)
 
 app.wsgi_app = VercelPathFixer(app.wsgi_app)
+
 
 
 
