@@ -12,4 +12,4 @@ dependencies = [
 ]
 
 [tool.vercel]
-entrypoint = "medex_ml_api.app:app"
+entrypoint = "medex_ml_api/app.py"
