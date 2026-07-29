@@ -54,7 +54,20 @@ app = Flask(__name__)
 CORS(app)
 
 
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({
+        "error": "404 Not Found",
+        "path": request.path,
+        "path_info": request.environ.get("PATH_INFO"),
+        "script_name": request.environ.get("SCRIPT_NAME"),
+        "request_uri": request.environ.get("REQUEST_URI"),
+        "raw_path": request.environ.get("RAW_URI")
+    }), 404
+
+
 class VercelPathFixer:
+
     def __init__(self, wsgi_app):
         self.wsgi_app = wsgi_app
 
