@@ -53,6 +53,21 @@ sys.modules["ml_models.training.train_models"] = train_models_mod
 app = Flask(__name__)
 CORS(app)
 
+
+@app.before_request
+def fix_routing():
+    path = request.environ.get("PATH_INFO", "")
+    if path.startswith("/api/index.py"):
+        path = path[len("/api/index.py"):]
+    elif path.startswith("/api"):
+        path = path[len("/api"):]
+
+    if not path or path == "":
+        path = "/"
+
+    request.environ["PATH_INFO"] = path
+
+
 # ======================
 # LOAD MODELS
 # ======================
