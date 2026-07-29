@@ -59,18 +59,23 @@ CORS(app)
 
 BASE_DIR = Path(__file__).resolve().parent
 MODELS_DIR = BASE_DIR / "models"
+if not MODELS_DIR.exists():
+    # Fallback for Vercel lambda filesystem layout
+    MODELS_DIR = Path("/var/task/medex_ml_api/models")
 
-heart_model = joblib.load(
-    MODELS_DIR / "heart_model.joblib"
-)
+print(f"Loading models from: {MODELS_DIR}")
 
-diabetes_model = joblib.load(
-    MODELS_DIR / "diabetes_model.joblib"
-)
+try:
+    heart_model = joblib.load(MODELS_DIR / "heart_model.joblib")
+    diabetes_model = joblib.load(MODELS_DIR / "diabetes_model.joblib")
+    bp_model = joblib.load(MODELS_DIR / "bp_model.joblib")
+    print("All ML models loaded successfully!")
+except Exception as err:
+    print(f"Error loading ML models: {err}")
+    heart_model = None
+    diabetes_model = None
+    bp_model = None
 
-bp_model = joblib.load(
-    MODELS_DIR / "bp_model.joblib"
-)
 
 
 def build_response(

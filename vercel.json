@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/index.py": {
+      "includeFiles": "medex_ml_api/models/**"
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",
