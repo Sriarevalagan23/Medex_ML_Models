@@ -1,2 +1,17 @@
+[project]
+name = "medex-ml-models"
+version = "0.1.0"
+dependencies = [
+    "flask",
+    "flask-cors",
+    "joblib",
+    "numpy",
+    "pandas",
+    "xgboost",
+    "scikit-learn==1.8.0",
+    "gunicorn==23.0.0",
+    "python-dotenv",
+]
+
 [tool.vercel]
 entrypoint = "medex_ml_api.app:app"
