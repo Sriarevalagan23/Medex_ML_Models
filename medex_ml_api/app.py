@@ -473,17 +473,16 @@ def explain_bp(
 @app.route("/debug-path", defaults={"path": ""})
 @app.route("/debug-path/<path:path>")
 def debug_path(path):
+    env_subset = {
+        k: str(v) for k, v in request.environ.items()
+        if any(x in k.upper() for x in ["PATH", "URI", "URL", "HTTP_", "VERCEL"])
+    }
     return jsonify({
         "received_path_param": path,
         "request_path": request.path,
-        "request_full_path": request.full_path,
-        "script_root": request.script_root,
-        "url": request.url,
-        "path_info": request.environ.get("PATH_INFO"),
-        "script_name": request.environ.get("SCRIPT_NAME"),
-        "request_uri": request.environ.get("REQUEST_URI"),
-        "raw_uri": request.environ.get("RAW_URI"),
+        "env_subset": env_subset
     })
+
 
 
 @app.route("/")
