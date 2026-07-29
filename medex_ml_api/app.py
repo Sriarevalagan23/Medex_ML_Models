@@ -54,18 +54,23 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.before_request
-def fix_routing():
-    path = request.environ.get("PATH_INFO", "")
-    if path.startswith("/api/index.py"):
-        path = path[len("/api/index.py"):]
-    elif path.startswith("/api"):
-        path = path[len("/api"):]
+class VercelPathFixer:
+    def __init__(self, wsgi_app):
+        self.wsgi_app = wsgi_app
 
-    if not path or path == "":
-        path = "/"
+    def __call__(self, environ, start_response):
+        path = environ.get("PATH_INFO", "")
+        for prefix in ["/api/index.py", "/api/index", "/api"]:
+            if path.startswith(prefix):
+                path = path[len(prefix):]
+                break
+        if not path or not path.startswith("/"):
+            path = "/" + path.lstrip("/")
+        environ["PATH_INFO"] = path
+        return self.wsgi_app(environ, start_response)
 
-    request.environ["PATH_INFO"] = path
+app.wsgi_app = VercelPathFixer(app.wsgi_app)
+
 
 
 # ======================
